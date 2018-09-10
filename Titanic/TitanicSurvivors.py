@@ -150,6 +150,7 @@ TestMtx = AllDF.iloc[891:,:-1];
 TrainX = TrainMtx.iloc[:,:-1].values;
 TrainY = TrainMtx['XSurvived'].values;
 
+"""
 #%% Model selection                          
 clf = RandomForestClassifier();
 param_grid = {'n_estimators':[100,200,400],'min_samples_split':[2,4,8]};
@@ -159,7 +160,7 @@ clf.n_estimators = cv_clf.best_params_['n_estimators'];
 clf.min_samples_split = cv_clf.best_params_['min_samples_split'];
 aaa = cross_val_score(clf,TrainX,y=TrainY);
 
-"""
+
 clf = GradientBoostingClassifier();
 param_grid = {'max_depth':[3,4,5],'n_estimators':[100,200,300,400]};
 cv_clf = GridSearchCV(estimator=clf, param_grid=param_grid,cv=3);
@@ -174,7 +175,7 @@ cv_clf = GridSearchCV(estimator=clf, param_grid=param_grid,cv=3);
 cv_clf.fit(TrainX,TrainY);
 clf.C = cv_clf.best_params_['C'];
 aaa = cross_val_score(clf,TrainX,y=TrainY);
-"""
+
 
 TestX = TestMtx.iloc[:,:].values;
 clf.fit(TrainX,TrainY);
@@ -184,3 +185,35 @@ Submitted = pd.DataFrame();
 Submitted['PassengerId'] = TestDF['PassengerId'];
 Submitted['Survived'] = clf.predict(TestX).astype(int);
 Submitted.to_csv("TitanicSubmission.csv", index=False)
+"""
+
+#%% Neural Network
+#%% Neural Network
+from keras.models import Sequential
+from keras.layers import Dense, Activation
+from keras.wrappers.scikit_learn import KerasClassifier
+
+# For a single-input model with 2 classes (binary classification):
+# Function to create model, required for KerasClassifier
+def create_model():
+    model = Sequential()
+    model.add(Dense(8, activation='relu', input_dim=16))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(optimizer='rmsprop',
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
+    return model
+
+model = KerasClassifier(build_fn=create_model, epochs=150, batch_size=10, verbose=0);
+aaa = cross_val_score(model,TrainX,y=TrainY);
+model.fit(TrainX,TrainY);
+
+TestX = TestMtx.iloc[:,:].values;
+
+Submitted = pd.DataFrame();
+Submitted['PassengerId'] = TestDF['PassengerId'];
+Submitted['Survived'] = model.predict(TestX).astype(int);
+Submitted.to_csv("TitanicSubmission.csv", index=False)
+
+
+
