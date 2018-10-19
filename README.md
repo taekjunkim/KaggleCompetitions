@@ -1,4 +1,4 @@
 # ML_Practice
-Practice ML using Kaggle competitions
+Practice machine learning using Kaggle competitions
 - Titanic
 - MNIST
