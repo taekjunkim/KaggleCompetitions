@@ -24,7 +24,7 @@ dataset = myDataSet();
 myDataLoader = DataLoader(dataset=dataset,batch_size=...,shuffle=True);
 
 # define myModel
-class myModel(nn.module):
+class myModel(nn.Module):
     def __init__(self):
         ...
     def forward(self,x):
