@@ -3,6 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.Fucntional as F
 from torch.utils.data import Dataset, DataLoader
+import torch.optim as optim
+from torch.autograd import Variable
 
 # Make dataset
 class myDataSet(Dataset):
